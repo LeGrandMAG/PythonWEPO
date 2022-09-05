@@ -5,18 +5,53 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-import os
 
 import time
 import json
-import pprint
-import csv
+
+from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
+
+
+from google.oauth2 import service_account
+
+
+
+SERVICE_ACCOUNT_FILE = 'keys.json'
+SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
+
+creds = None
+creds = service_account.Credentials.from_service_account_file(
+        SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+
+
+
+
+# The ID and range of a sample spreadsheet.
+SAMPLE_SPREADSHEET_ID = '14PXpbLAp3_J3dB8-CCLWIYm8q-RN2JJ5kIZRF7TuJYQ'
+
+
+
+
+
+
+service = build('sheets', 'v4', credentials=creds)
+
+# Call the Sheets API
+sheet = service.spreadsheets()
+result = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID,
+                            range="Sheet1!A:D").execute()
+values = result.get('values', [])
+
+#request = sheet.values().update(spreadsheetId=SAMPLE_SPREADSHEET_ID, range="Sheet2!A:C", valueInputOption="USER_ENTERED", body={"values":AOA}).execute()
+#request = sheet.values().append(spreadsheetId=spreadsheet_id, range=range_, valueInputOption=value_input_option, insertDataOption=insert_data_option, body=value_range_body)
+
+
 
 
 ##These are the css class to choose the information
 class_name = ["_4gus", "_1-sk", "_4guw", "_4gut", "_5rgt _5nk5 _5msi", "_il"]
 
-post=[]
 
 articleContainerClass ="//article[@class='_55wo _5rgr _5gh8 async_like']"
 
@@ -136,7 +171,6 @@ def FbLogin(num):
 postContentClass =[]
 
 print("Now collecting the data", end="")
-time.sleep(2)
 for e in range(3):
     print('.', end="")
     time.sleep(2)
@@ -146,6 +180,7 @@ print('\n')
 
 #This is a function to collect data
 def Collect(r):
+    post = []
     action_chain = webdriver.ActionChains(driver)
     refresh = driver.refresh()
     print("\n")
@@ -154,7 +189,7 @@ def Collect(r):
     # A Loop to scroll at the bottom of the page
     for a in range(r*5):
         action_chain.key_down(Keys.END).perform()
-        print("scroll " + str(a))
+        print(str(a) + " scroll")
         time.sleep(1)
     print("\n")
     # This is the variable for list of articles we are going to retrieve. 
@@ -163,7 +198,8 @@ def Collect(r):
     for i in listOfArticles:
         
         #Here we will retrieve the name of the seller, the post content and the post link
-        postObject = {}
+        postArray = []
+        post = []
     #print(i)
         l = i.find_elements(By.CLASS_NAME, "story_body_container")
         
@@ -173,7 +209,7 @@ def Collect(r):
             #If it is a shared post
             sellerName = l[1].find_element(By.XPATH,".//strong").text
             postDetail = l[1].find_element(By.XPATH,".//div[@class='_5rgt _5nk5 _5msi']").text
-            postLink = fbLink + l[1].find_element(By.XPATH,".//a[@class='_5msj']").get_attribute("href")
+            postLink = l[1].find_element(By.XPATH,".//a[@class='_5msj']").get_attribute("href")
 
         elif(len(l)==1):
             # If it was not shared
@@ -192,68 +228,50 @@ def Collect(r):
             if t =="/":
                 numberOfSlash += 1
             temp.append(t)
-        if "https://mobile.facebook.com" in postLink:
+        if "https://m" in postLink:
             postLink = "".join(temp)
         else:
             postLink = "https://mobile.facebook.com" + "".join(temp)
 
-        time.sleep(1)
 
         # We will save the retrieved data into the post object and save it in our list.
 
         # Check if the post is not empty
-        if(len(postDetail)>0):    
-            postObject['sellerName'] = sellerName
-            postObject['postDetail'] = postDetail
-            postObject['postLink'] = postLink
-
+        if(len(postDetail)>0 ):    
+            postArray.append(sellerName)
+            postArray.append(postDetail)
+            postArray.append(postLink)
             # print the collected Data to the console
             print("Seller Name: " + sellerName)
             print("\n")
-            print("POST CONTENT\n==== ======\n" + postDetail + "\n")
+            print("POST CONTENT\n==== ======\n\n" + postDetail + "\n")
             print("Post Link: " + postLink + "\n" )
+            print(postArray)
+            post.append(postArray)
+            SaveOnGoogleSheet(post)
+            print("\n === The post was added to the list of data to be saved ===\n")
             time.sleep(1)
 
         # If the post is empty, we will return an empty object
-        else:
-            postObject = {}
-
-        # We will check if the post we are trying to save already exist in our post array. If the post already exists we will not save it in the array.
-        for i in post:
-
-            #Check if the post already exist in the list
-
-            if postObject['postLink'] == i['postLink']:
-                print("This post already exist in the data base.")
+        elif postDetail == "" or len(postDetail)==0:
+            continue
             
-            # check if the post is empty
-            elif postObject == {} :
-                print("This post is empty")
-
-            # Add the post in the array if it is not empty   
-            else:
-                post.append(postObject)
-        print("----------------------")
-        print("\n")
-        time.sleep(1)
+    print("----------------------")
+    print("\n")
+    return("saved")
     
-    time. sleep(3)
         
 
 
 
 #This is a function to save all the data retrieved a a Json file.
-def SaveJason():    
-    a_file = open("data.json", "a", -1, 'utf-8')
-    json.dump(post, a_file)
-    a_file.close()
-    print("File saved successfully")
-    print("\n")
+def SaveOnGoogleSheet(fbData):  
+    #sheet.values().update(spreadsheetId=SAMPLE_SPREADSHEET_ID, range="Sheet2!A:C", valueInputOption="USER_ENTERED", body={"values":AOA}).execute()
+    request = sheet.values().append(spreadsheetId=SAMPLE_SPREADSHEET_ID, range="Sheet1!A:C", valueInputOption="USER_ENTERED", insertDataOption="INSERT_ROWS", body={"values":fbData}).execute()
+    print(request)
+    print("This data from the Facebook group were successfully saved")
 
-    print(">>>>>>>>>>>> HERE IS YOUR FILE <<<<<<<<<<<<\n\n"*5)
-    a_file = open("data.json", "r",-1, 'utf-8')
-    output = a_file.read()
-    print(output)
+
 
 
 #This is a function to go down the page.
@@ -287,7 +305,7 @@ for n in  range(len(groupLinks)):
 
 
     #print(youMust + " " + loog)
-    if(youMust == "You must log in first." or loog == yy):
+    if(youMust == "You must log in first." or yy in loog):
         FbLogin(sec)
         time.sleep(3)
         sentence = driver.find_element(By.CLASS_NAME, "_6j_c").text
@@ -301,32 +319,29 @@ for n in  range(len(groupLinks)):
             for p in range(sec):
                 GoDown(p)
             Collect(sec)
-            SaveJason()
-            print("successfully scrapped")
 
     else:
         sentence = driver.find_element(By.CLASS_NAME, "_6j_c").text
         if sentence == "Contenu introuvable":   
-            print(f"Group Name: {sentence}")
+            #print(f"Group Name: {sentence}")
             continue
         elif sentence != "Contenu introuvable":
-            print(">>>Login barrier does not exist <<<")
-            time.sleep(2)
-            print("\n You can scroll safely")
+            print(">>>Login barrier does not exist <<<\n")
+            print("\n You can scroll safely\n")
             GoDown(sec)
             for p in range(sec):
                 time.sleep(sec)
                 GoDown(p)
             Collect(sec)
-            SaveJason()
-    print("successfully scrapped")
+        time.sleep(2)
+
     
 
 
 
 driver.close()  
 print("Driver is closed\n")
-SaveJason()
+
 
 
 

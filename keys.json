@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "wepo-facebook-data",
+  "private_key_id": "b404d7102b858f76df32efd6607efae402cc1ee9",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDAAiOC69jtvfGO\nnZFjyugyocIsAe/vOPAvE5DmTOsnzeM8BSzM3NT/LeQrf/UayJSHc2Nc36H5VJG6\nRLq/JTblD9Twee9bo3Xdb5kvXdE/9B+OsFU4Z4kDJbSVCnno/BX66kbVKJvwm85F\n1ommkMsmnAmloKE+r+dbXn1xMqtfHLk4BZMLMTzfvn6HzLXTDDnGhIXg3PicausW\nt6RBIdAode6krJNUwfXGE+vt+8AIzFqBzczAeIxSgycXzavggSieMCpfcivi/YAs\nxU4akU3E8d4VFv7rw5jueM6jhDS12pDoLppfI17Kca8O+iFD8DBUEdVrsq4QH2ZK\nU7H4PLpJAgMBAAECggEACSEQ5yynh8Y8Mfez7fa7y4x9WvJMoicm5FYd0ZVeqOnV\nIAlu896cEfXwn1DaKofW6AnIc6X+YYhv1VdnOadfUMzL5xMlGkpPVFP2CJaBWHUW\n+wXPR3tEvG2ShHOXEEjMEr4I2CGyKGKAEDn/GXhQ8GkC3GkiwYRDj8iSVkt+cmsq\nG71H7UzVfbr+XMTjBIy1vs7tj1+JJJIEmYAcGyeRm3XXYLKDRDwCHpUMdhrVvRUN\niL1ERb24bFcty8pDUkL46d1f0pZM5gIVXXtlDRmRTLVbDVLOapoY5NDGZq02BJuO\ng9e1Ooy4eIlXtv0B97ghplyT7i4fQXTjdfcDcbrRsQKBgQDkX8hBrO/69Qdg5wtW\nWXn3LufHbRz96/HLHJRoHDsdYs8cRXVito5eUUciiLB+tRXFLXwnblhqkdLceM2L\n1KCOEFwq+K9Eq1vZDx5cAlbJ8ltM5+5TXY3riBNeEuPK6tITS9YGuXoM6o7zzsVO\n2nOdcaO3aPUkYSzj2RSt8YwO2wKBgQDXPDEvouAVV3NpO0V/j/C3S1DNDSDhtHxQ\np0P3MWpqObO70Rf5LttTi99Eszx61+ubGO+hyZTx7rqhyrP09Ace6/S4v/krN7cQ\no/93efGw/G8mz1j/5ZUFO4mnKXhDheRp8UcST7rRR0EGzsVWye4qgU1lGJb4dxGn\nV70XrsLKqwKBgDl+T5kRI51nYIMpx3Xmssji+yD+vETEyKuct1P6f3tna8KvTd0b\nHn5qMeFkziIoDqIEUHRQ2FuD+LTeiMjCL+V0AvAiiWVdSpM7tiXtxNG0fP3AigRc\n0iTQrieJ0+U69sY62lf5C9wClRiWHqA6aM7jVBcRil2tRTLbbNRZsivvAoGBAJQX\nEjCYfF2ywfHRmkvemd1DsOCk+87QBAjqTVUzZuiXsxazEy+cEcQ2JPR77k0Ha1BX\no+lJbXXYsAjKE2+ix5N6/fJwA9y8hPSqIgfum2EPDttBJxdKu3HSOTAO1HSBF1vd\nau0qdnuv7wnkEttYLMqKFNpORPHH2xmswKoe0F/pAoGAZ/+As8N5JTqRxx5V1p6y\nI7I2mD4uhc7C7BkncKSL+ZdXob0HVRZCZoc1tCtLpV2cZ/0jZpv/n6FJ2d0oQCXH\nrWU+5kkwvijqnlI4MBz8GMjgBywmlKSOBviCMzMMsHsMF6Ze+vAr4TIHGfGjBbsd\nscrxqFbFMpfVbxpniT6lHlg=\n-----END PRIVATE KEY-----\n",
+  "client_email": "wepofacebookdata@wepo-facebook-data.iam.gserviceaccount.com",
+  "client_id": "105118317576948433345",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/wepofacebookdata%40wepo-facebook-data.iam.gserviceaccount.com"
+}
