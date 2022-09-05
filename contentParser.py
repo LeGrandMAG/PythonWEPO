@@ -285,8 +285,8 @@ def GoDown( num):
 #This is the loop that will help us loop through all the facebook groups, collect the data and save it into our Json file.
 
 
-for n in  range(len(groupLinks)):
-    OpenLink(groupLinks[n], sec)
+for n in  range(len(groupLinks)-1):
+    OpenLink(groupLinks[len(groupLinks)-1-n], sec)
     time.sleep(3)
     #l = driver.find_elements(By.ID,"mobile_login_bar")
     #s = len(l)
@@ -321,7 +321,10 @@ for n in  range(len(groupLinks)):
             Collect(sec)
 
     else:
-        sentence = driver.find_element(By.CLASS_NAME, "_6j_c").text
+        try:
+            sentence = driver.find_element(By.CLASS_NAME, "_6j_c").text
+        except:
+            continue
         if sentence == "Contenu introuvable":   
             #print(f"Group Name: {sentence}")
             continue
@@ -346,11 +349,7 @@ print("Driver is closed\n")
 
 
 
-##title = "class _4gus "
-##state = "_4gut"
-##price = "_4guw"
 
-##content="_il"
 
 
 
