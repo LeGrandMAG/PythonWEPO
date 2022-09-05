@@ -241,7 +241,7 @@ def Collect(r):
 #This is a function to save all the data retrieved a a Json file.
 def SaveJason():    
     a_file = open("data.json", "a", -1, 'utf-8')
-    json.dump(post, a_file[0])
+    json.dump(post, a_file)
     a_file.close()
     print("File saved successfully")
     print("\n")
