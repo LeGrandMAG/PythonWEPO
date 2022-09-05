@@ -180,7 +180,7 @@ def Collect(r):
 
             sellerName = l[0].find_element(By.XPATH,".//strong").text
             postDetail = l[0].find_element(By.XPATH,".//div[@class='_5rgt _5nk5 _5msi']").text
-            postLink = fbLink + l[0].find_element(By.XPATH,".//a[@class='_5msj']").get_attribute("href")
+            postLink = l[0].find_element(By.XPATH,".//a[@class='_5msj']").get_attribute("href")
         
         #Let's shorten the post link 
         numberOfSlash = 0
@@ -192,7 +192,11 @@ def Collect(r):
             if t =="/":
                 numberOfSlash += 1
             temp.append(t)
-        postLink = "".join(temp)
+        if "https://mobile.facebook.com" in postLink:
+            postLink = "".join(temp)
+        else:
+            postLink = "https://mobile.facebook.com" + "".join(temp)
+
         time.sleep(1)
 
         # We will save the retrieved data into the post object and save it in our list.
@@ -206,7 +210,7 @@ def Collect(r):
             # print the collected Data to the console
             print("Seller Name: " + sellerName)
             print("\n")
-            print("POST CONTENT\n==== ======" + postDetail + "\n")
+            print("POST CONTENT\n==== ======\n" + postDetail + "\n")
             print("Post Link: " + postLink + "\n" )
             time.sleep(1)
 
