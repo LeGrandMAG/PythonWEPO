@@ -5,6 +5,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from webdriver_manager.chrome import ChromeDriverManager
 import os
 
 import time
@@ -87,13 +88,13 @@ chrome_options.add_experimental_option("prefs",prefs)
 
 
 #specify the path to chromedriver.exe (download and save on your computer) and launch chrome driver
-driver = webdriver.Chrome('C:/Users/maglo/chromedriver.exe',options=chrome_options)
+driver = webdriver.Chrome('C:/Users/KING-K-S/pythonWEPO/pythonWEPO/chromedriver.exe',options=chrome_options)
 wait = WebDriverWait(driver, 2)
 
 
 
 
-
+1
 #This function loop through the facebook links and open each of them
 def OpenLink(li, num):
         print("Now processing Page: "+"\n"+ li)
