@@ -1,4 +1,6 @@
-google-api-python-client 
-google-auth-httplib2 
-google-auth-oauthlib
-selenium
+
+In order for this program to run smoothly you will need to install the following:
+    - google-api-python-client 
+    - google-auth-httplib2 
+    - google-auth-oauthlib
+    - selenium
