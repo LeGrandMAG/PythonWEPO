@@ -179,7 +179,7 @@ print('\n')
 
 
 #This is a function to collect data
-def Collect(r):
+def Collect(r, t):
     post = []
     action_chain = webdriver.ActionChains(driver)
     refresh = driver.refresh()
@@ -187,10 +187,10 @@ def Collect(r):
     time.sleep(3)
 
     # A Loop to scroll at the bottom of the page
-    for a in range(r*5):
+    for a in range(t):
         action_chain.key_down(Keys.END).perform()
         print(str(a) + " scroll")
-        time.sleep(1)
+        time.sleep(3)
     print("\n")
     # This is the variable for list of articles we are going to retrieve. 
     listOfArticles = driver.find_elements(By.XPATH, articleContainerClass)    
@@ -277,7 +277,7 @@ def SaveOnGoogleSheet(fbData):
 #This is a function to go down the page.
 def GoDown( num):
     webdriver.ActionChains(driver).key_down(Keys.END).perform()
-    time.sleep(num/2)
+    time.sleep(3)
 
 
 
@@ -318,7 +318,7 @@ for n in  range(len(groupLinks)-1):
             print("Logged in Successfully\n")
             for p in range(sec):
                 GoDown(p)
-            Collect(sec)
+            Collect(sec,scroll)
 
     else:
         try:
@@ -335,7 +335,7 @@ for n in  range(len(groupLinks)-1):
             for p in range(sec):
                 time.sleep(sec)
                 GoDown(p)
-            Collect(sec)
+            Collect(sec,scroll)
         time.sleep(2)
 
     
