@@ -257,6 +257,7 @@ def Collect(r, t):
     for i in listOfArticles:
         
         #Here we will retrieve the name of the seller, the post content and the post link
+        post = []
         postArray = []
     #print(i)
         l = i.find_elements(By.CLASS_NAME, "story_body_container")
@@ -274,10 +275,9 @@ def Collect(r, t):
 
             sellerName = l[0].find_element(By.XPATH,".//strong").text
             postDetail = l[0].find_element(By.XPATH,".//div[@class='_5rgt _5nk5 _5msi']").text
-            time.sleep(0.5)
             postLink = l[0].find_element(By.XPATH,".//a[@class='_5msj']").get_attribute("href")
         else:
-            postLink = 0
+            postLink = ""
         #Let's shorten the post link 
         numberOfSlash = 0
         temp = []
@@ -324,6 +324,10 @@ def Collect(r, t):
             #print("Post Link: " + postLink + "\n" )
             #print(postArray)
             post.append(postArray)
+            print(f"This temporary post list has: {len(post)} posts")
+            SaveOnGoogleSheet(post)
+            time.sleep(0.5)
+
             print("\n === The post was added to the list of data to be saved ===\n")
 
         # If the post is empty, we will return an empty object
@@ -334,9 +338,7 @@ def Collect(r, t):
     print("\n")
 
     #IF the post is not empty add it in the google drive.
-    if len(post)>0:
-        print(f"This temporary post list has: {len(post)} posts")
-        SaveOnGoogleSheet(post)
+    
     
         
 
@@ -346,8 +348,8 @@ def Collect(r, t):
 def SaveOnGoogleSheet(fbData):  
     #sheet.values().update(spreadsheetId=SAMPLE_SPREADSHEET_ID, range="Sheet2!A:C", valueInputOption="USER_ENTERED", body={"values":AOA}).execute()
     request = sheet.values().append(spreadsheetId=SAMPLE_SPREADSHEET_ID, range="Sheet1!A:C", valueInputOption="USER_ENTERED", insertDataOption="INSERT_ROWS", body={"values":fbData}).execute()
-    print(request['updatedRows'])
-    print(request['updatedRange'])
+    print(request)
+    print(request)
     print("=== This saved on google sheet ===\n")
 
 
