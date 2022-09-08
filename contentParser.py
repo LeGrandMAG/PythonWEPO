@@ -5,7 +5,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from webdriver_manager.chrome import ChromeDriverManager
+#from webdriver_manager.chrome import ChromeDriverManager
 
 import time
 import json
@@ -60,60 +60,117 @@ articleContainerClass ="//article[@class='_55wo _5rgr _5gh8 async_like']"
 #commentXPath = "//footer/div/div[1]/a/div/div[2]/span"
 #reactionXPath ="footer/div/div[1]/a/div/div[1]/div"
 fbLink = "https://mobile.facebook.com/"
-groupLinks = [
-    "https://mobile.facebook.com/groups/3323854697841336/?ref=group_browse",
-    "https://mobile.facebook.com/groups/2396795340453227/?ref=group_browse",
-    "https://mobile.facebook.com/groups/2232354350372325/?ref=group_browse",
-    "https://mobile.facebook.com/groups/1856072608051143/?ref=group_browse",
-    "https://mobile.facebook.com/groups/1712424082372481/?ref=group_browse",
-    "https://mobile.facebook.com/groups/1606567199558157/?ref=group_browse",
-    "https://mobile.facebook.com/groups/1549030312003177/?ref=group_browse",
-    "https://mobile.facebook.com/groups/1050735792104175/?ref=group_browse",
-    "https://mobile.facebook.com/groups/557339772259465/?ref=group_browse",
-    "https://mobile.facebook.com/groups/494938151630057/?ref=group_browse",
-    "https://mobile.facebook.com/groups/485595848653433/?ref=group_browse",
-    "https://mobile.facebook.com/groups/434661027871196/?ref=group_browse",
-    "https://mobile.facebook.com/groups/427336388401184/?ref=group_browse",
-    "https://mobile.facebook.com/groups/352120431828349/?ref=group_browse",
-    "https://mobile.facebook.com/groups/296525075547264/?ref=group_browse",
-    "https://mobile.facebook.com/groups/283780253092282/?ref=group_browse",
-    "https://mobile.facebook.com/groups/261658928421492/?ref=group_browse",
-    "https://mobile.facebook.com/groups/193427604794787/?ref=group_browse",
-    "https://mobile.facebook.com/groups/174021326556602/?ref=group_browse",
-    "https://mobile.facebook.com/groups/157070304903101/?ref=group_browse",
-    "https://mobile.facebook.com/groups/114975699094438/?ref=group_browse",
-    "https://mobile.facebook.com/groups/3073972669330453/?ref=group_browse",
-    "https://mobile.facebook.com/groups/2932215260333602/?ref=group_browse",
-    "https://mobile.facebook.com/groups/2777314399147797/?ref=group_browse",
-    "https://mobile.facebook.com/groups/2267421523507404/?ref=group_browse",
-    "https://mobile.facebook.com/groups/2025771334359815/?ref=group_browse",
-    "https://mobile.facebook.com/groups/1994886254131045/?ref=group_browse",
-    "https://mobile.facebook.com/groups/630353667861611/?ref=group_browse",
-    "https://mobile.facebook.com/groups/575029336040752/?ref=group_browse",
-    "https://mobile.facebook.com/groups/480658072822702/?ref=group_browse",
-    "https://mobile.facebook.com/groups/377436819112288/?ref=group_browse",
-    "https://mobile.facebook.com/groups/304222654430887/?ref=group_browse",
-    "https://mobile.facebook.com/groups/178202949050334/?ref=group_browse",
-    "https://mobile.facebook.com/groups/123383601176136/?ref=group_browse",
-    "https://mobile.facebook.com/groups/4458091350904337/?ref=group_browse",
-    "https://mobile.facebook.com/groups/1659094737714974/?ref=group_browse"
-    ]
 
+groupLink =  [{'link': 'https://mobile.facebook.com/groups/3966103180150631/'},
+ {'link': 'https://mobile.facebook.com/groups/162954537532473/'},
+ {'link': 'https://mobile.facebook.com/groups/241523078029097/'},
+ {'link': 'https://mobile.facebook.com/groups/5281764115191912/'},
+ {'link': 'https://mobile.facebook.com/groups/556900801513172/'},
+ {'link': 'https://mobile.facebook.com/groups/199970028622185/'},
+ {'link': 'https://mobile.facebook.com/groups/114868290520926/'},
+ {'link': 'https://mobile.facebook.com/groups/653340472437452/'},
+ {'link': 'https://mobile.facebook.com/groups/3323854697841336/'},
+ {'link': 'https://mobile.facebook.com/groups/672548700534764/'},
+ {'link': 'https://mobile.facebook.com/groups/180494450628005/'},
+ {'link': 'https://mobile.facebook.com/groups/153004319765661/'},
+ {'link': 'https://mobile.facebook.com/groups/3207197752833444/'},
+ {'link': 'https://mobile.facebook.com/groups/3004218809894974/'},
+ {'link': 'https://mobile.facebook.com/groups/2623494271292647/'},
+ {'link': 'https://mobile.facebook.com/groups/1530005517277224/'},
+ {'link': 'https://mobile.facebook.com/groups/1481419625362186/'},
+ {'link': 'https://mobile.facebook.com/groups/237921257324038/'},
+ {'link': 'https://mobile.facebook.com/groups/335538414118390/'},
+ {'link': 'https://mobile.facebook.com/groups/2512061195782681/'},
+ {'link': 'https://mobile.facebook.com/groups/216581003986576/'},
+ {'link': 'https://mobile.facebook.com/groups/222797959913540/'},
+ {'link': 'https://mobile.facebook.com/groups/4458091350904337/'},
+ {'link': 'https://mobile.facebook.com/groups/1440652346351767/'},
+ {'link': 'https://mobile.facebook.com/groups/481026930204042/'},
+ {'link': 'https://mobile.facebook.com/groups/2232354350372325/'},
+ {'link': 'https://mobile.facebook.com/groups/4326455680731929/'},
+ {'link': 'https://mobile.facebook.com/groups/2396795340453227/'},
+ {'link': 'https://mobile.facebook.com/groups/870547810546899/'},
+ {'link': 'https://mobile.facebook.com/groups/1063685117059224/'},
+ {'link': 'https://mobile.facebook.com/groups/3145104845574018/'},
+ {'link': 'https://mobile.facebook.com/groups/1924841527741622/'},
+ {'link': 'https://mobile.facebook.com/groups/1668267026694436/'},
+ {'link': 'https://mobile.facebook.com/groups/1326923207672539/'},
+ {'link': 'https://mobile.facebook.com/groups/1050735792104175/'},
+ {'link': 'https://mobile.facebook.com/groups/988964685032210/'},
+ {'link': 'https://mobile.facebook.com/groups/973184080219760/'},
+ {'link': 'https://mobile.facebook.com/groups/965342120846683/'},
+ {'link': 'https://mobile.facebook.com/groups/959531651331444/'},
+ {'link': 'https://mobile.facebook.com/groups/945704665985070/'},
+ {'link': 'https://mobile.facebook.com/groups/904869436679339/'},
+ {'link': 'https://mobile.facebook.com/groups/855731991501131/'},
+ {'link': 'https://mobile.facebook.com/groups/824817284682260/'},
+ {'link': 'https://mobile.facebook.com/groups/818527738883388/'},
+ {'link': 'https://mobile.facebook.com/groups/814431895688471/'},
+ {'link': 'https://mobile.facebook.com/groups/810087326318921/'},
+ {'link': 'https://mobile.facebook.com/groups/755398911818459/'},
+ {'link': 'https://mobile.facebook.com/groups/708905712627130/'},
+ {'link': 'https://mobile.facebook.com/groups/673810406402554/'},
+ {'link': 'https://mobile.facebook.com/groups/661458215057816/'},
+ {'link': 'https://mobile.facebook.com/groups/651235932668933/'},
+ {'link': 'https://mobile.facebook.com/groups/607221143754265/'},
+ {'link': 'https://mobile.facebook.com/groups/603786827367433/'},
+ {'link': 'https://mobile.facebook.com/groups/601451374497555/'},
+ {'link': 'https://mobile.facebook.com/groups/589906052154278/'},
+ {'link': 'https://mobile.facebook.com/groups/576407803938295/'},
+ {'link': 'https://mobile.facebook.com/groups/537320497314948/'},
+ {'link': 'https://mobile.facebook.com/groups/530901071561693/'},
+ {'link': 'https://mobile.facebook.com/groups/511968929865430/'},
+ {'link': 'https://mobile.facebook.com/groups/510321486475412/'},
+ {'link': 'https://mobile.facebook.com/groups/507311236729344/'},
+ {'link': 'https://mobile.facebook.com/groups/494938151630057/'},
+ {'link': 'https://mobile.facebook.com/groups/BusinessAvenueKennedy/'},
+ {'link': 'https://mobile.facebook.com/groups/452312899465708/'},
+ {'link': 'https://mobile.facebook.com/groups/448757699886602/'},
+ {'link': 'https://mobile.facebook.com/groups/435423051233403/'},
+ {'link': 'https://mobile.facebook.com/groups/433416427691003/'},
+ {'link': 'https://mobile.facebook.com/groups/423593707665319/'},
+ {'link': 'https://mobile.facebook.com/groups/421201913105415/'},
+ {'link': 'https://mobile.facebook.com/groups/409635187484865/'},
+ {'link': 'https://mobile.facebook.com/groups/403108787815568/'},
+ {'link': 'https://mobile.facebook.com/groups/394578501802490/'},
+ {'link': 'https://mobile.facebook.com/groups/353342075612193/'},
+ {'link': 'https://mobile.facebook.com/groups/302541855150147/'},
+ {'link': 'https://mobile.facebook.com/groups/290265768930182/'},
+ {'link': 'https://mobile.facebook.com/groups/278589683717538/'},
+ {'link': 'https://mobile.facebook.com/groups/273882999805184/'},
+ {'link': 'https://mobile.facebook.com/groups/267446018791261/'},
+ {'link': 'https://mobile.facebook.com/groups/265019418581655/'},
+ {'link': 'https://mobile.facebook.com/groups/254663883084070/'},
+ {'link': 'https://mobile.facebook.com/groups/242584221184584/'},
+ {'link': 'https://mobile.facebook.com/groups/241704094385183/'},
+ {'link': 'https://mobile.facebook.com/groups/226033314796476/'},
+ {'link': 'https://mobile.facebook.com/groups/143739249735548/'},
+ {'link': 'https://mobile.facebook.com/groups/114975699094438/'},
+ {'link': 'https://mobile.facebook.com/groups/2932215260333602/'},
+ {'link': 'https://mobile.facebook.com/groups/3095066560726626/'},
+ {'link': 'https://mobile.facebook.com/groups/1305001263300774/'},
+ {'link': 'https://mobile.facebook.com/groups/1113928432436940/'},
+ {'link': 'https://mobile.facebook.com/groups/1106836953180224/'},
+ {'link': 'https://mobile.facebook.com/groups/596912204940042/'},
+ {'link': 'https://mobile.facebook.com/groups/281826390445844/'},
+ {'link': 'https://mobile.facebook.com/groups/322276606448296/'},
+ {'link': 'https://mobile.facebook.com/groups/577166053305561/'},
+ {'link': 'https://mobile.facebook.com/groups/601765924047082/'},
+ {'link': 'https://mobile.facebook.com/groups/440891977563406/'},
+ {'link': 'https://mobile.facebook.com/groups/393809775499534/'},
+ {'link': 'https://mobile.facebook.com/groups/296525075547264/'},
+ {'link': 'https://mobile.facebook.com/groups/2619005908213000/'},
+ {'link': 'https://mobile.facebook.com/groups/434661027871196/'},
+ {'link': 'https://mobile.facebook.com/groups/423828516045341/'},
+ {'link': 'https://mobile.facebook.com/groups/592625602008582/'},
+ {'link': 'https://mobile.facebook.com/groups/1967236646682359/'}]
 
 sec= int(input("input the processing time: "))
 scroll=int(input("input the number of time you want to scroll: "))
 
 words=[]
 #listnum = int(input("How many word in the list: "))
-def WordList(mot,o):
-    n = 1
-    while(n>0):
-        new = str(input("Insert the keyword #" + str(n) + ": "))
-        if new == '0':
-            break
-        else:
-            mot.append(new)
-            n+=1
+
         
 #Set up the Chrome options
 
@@ -123,7 +180,8 @@ chrome_options.add_experimental_option("prefs",prefs)
 
 
 #specify the path to chromedriver.exe (download and save on your computer) and launch chrome driver
-driver = webdriver.Chrome('C:/Users/KING-K-S/pythonWEPO/pythonWEPO/chromedriver.exe',options=chrome_options)
+#driver = webdriver.Chrome('C:/Users/KING-K-S/pythonWEPO/pythonWEPO/chromedriver.exe',options=chrome_options)
+driver = webdriver.Chrome('C:/Users/maglo/chromedriver.exe',options=chrome_options)
 wait = WebDriverWait(driver, 2)
 
 
@@ -236,25 +294,32 @@ def Collect(r, t):
 
 
         # We will save the retrieved data into the post object and save it in our list.
+        exist = False
+
+        for elem in values:
+                if postLink == elem[2]:
+                    print(elem[2])
+                    print("This link already exist")
+                    exist = True
+                    break
 
         # Check if the post is not empty
-        if(len(postDetail)>0 ):    
+        if(len(postDetail)>0 and exist == False ):    
             postArray.append(sellerName)
             postArray.append(postDetail)
             postArray.append(postLink)
             # print the collected Data to the console
-            print("Seller Name: " + sellerName)
+            #print("Seller Name: " + sellerName)
             print("\n")
-            print("POST CONTENT\n==== ======\n\n" + postDetail + "\n")
+            #print("POST CONTENT\n==== ======\n\n" + postDetail + "\n")
             print("Post Link: " + postLink + "\n" )
-            print(postArray)
+            #print(postArray)
             post.append(postArray)
             SaveOnGoogleSheet(post)
             print("\n === The post was added to the list of data to be saved ===\n")
-            time.sleep(1)
 
         # If the post is empty, we will return an empty object
-        elif postDetail == "" or len(postDetail)==0:
+        elif exist == True and postDetail == "" or len(postDetail)==0:
             continue
             
     print("----------------------")
@@ -286,8 +351,8 @@ def GoDown( num):
 #This is the loop that will help us loop through all the facebook groups, collect the data and save it into our Json file.
 
 
-for n in  range(len(groupLinks)-1):
-    OpenLink(groupLinks[len(groupLinks)-1-n], sec)
+for n in  range(len(groupLink)-1):
+    OpenLink(groupLink[len(groupLink)-1-n]['link'], sec)
     time.sleep(3)
     #l = driver.find_elements(By.ID,"mobile_login_bar")
     #s = len(l)
