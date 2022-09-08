@@ -258,7 +258,6 @@ def Collect(r, t):
         
         #Here we will retrieve the name of the seller, the post content and the post link
         postArray = []
-        post = []
     #print(i)
         l = i.find_elements(By.CLASS_NAME, "story_body_container")
         
@@ -275,47 +274,56 @@ def Collect(r, t):
 
             sellerName = l[0].find_element(By.XPATH,".//strong").text
             postDetail = l[0].find_element(By.XPATH,".//div[@class='_5rgt _5nk5 _5msi']").text
+            time.sleep(0.5)
             postLink = l[0].find_element(By.XPATH,".//a[@class='_5msj']").get_attribute("href")
-        
+        else:
+            postLink = 0
         #Let's shorten the post link 
         numberOfSlash = 0
         temp = []
-        for t in postLink:
 
-            if numberOfSlash ==7:
-                break
-            if t =="/":
-                numberOfSlash += 1
-            temp.append(t)
-        if "https://m" in postLink:
-            postLink = "".join(temp)
-        else:
-            postLink = "https://mobile.facebook.com" + "".join(temp)
+        if len(postLink) >1:
+            for t in postLink:
+
+                if numberOfSlash ==7:
+                    break
+                if t =="/":
+                    numberOfSlash += 1
+                temp.append(t)
+            if "https://m" in postLink:
+                postLink = "".join(temp)
+            else:
+                postLink = "https://mobile.facebook.com" + "".join(temp)
 
 
         # We will save the retrieved data into the post object and save it in our list.
         exist = False
-
+        #check if the link already exist in the list of posts from the google sheet
         for elem in values:
                 if postLink == elem[2]:
-                    print(elem[2])
-                    print("This link already exist")
+                    print(f"{elem[2]} already exists")
+
                     exist = True
                     break
-
-        # Check if the post is not empty
+        
+        #check if it exist in the temporary list of posts.
+        if exist==False:
+            for x in post:
+                if postLink == x[2]:
+                    print(f"{elem[2]} already exists")
+                    exist = True
+                    break
+        #add the post to the temporary lists
         if(len(postDetail)>0 and exist == False ):    
             postArray.append(sellerName)
             postArray.append(postDetail)
             postArray.append(postLink)
             # print the collected Data to the console
             #print("Seller Name: " + sellerName)
-            print("\n")
             #print("POST CONTENT\n==== ======\n\n" + postDetail + "\n")
-            print("Post Link: " + postLink + "\n" )
+            #print("Post Link: " + postLink + "\n" )
             #print(postArray)
             post.append(postArray)
-            SaveOnGoogleSheet(post)
             print("\n === The post was added to the list of data to be saved ===\n")
 
         # If the post is empty, we will return an empty object
@@ -324,7 +332,11 @@ def Collect(r, t):
             
     print("----------------------")
     print("\n")
-    return("saved")
+
+    #IF the post is not empty add it in the google drive.
+    if len(post)>0:
+        print(f"This temporary post list has: {len(post)} posts")
+        SaveOnGoogleSheet(post)
     
         
 
@@ -334,8 +346,9 @@ def Collect(r, t):
 def SaveOnGoogleSheet(fbData):  
     #sheet.values().update(spreadsheetId=SAMPLE_SPREADSHEET_ID, range="Sheet2!A:C", valueInputOption="USER_ENTERED", body={"values":AOA}).execute()
     request = sheet.values().append(spreadsheetId=SAMPLE_SPREADSHEET_ID, range="Sheet1!A:C", valueInputOption="USER_ENTERED", insertDataOption="INSERT_ROWS", body={"values":fbData}).execute()
-    print(request)
-    print("This data from the Facebook group were successfully saved")
+    print(request['updatedRows'])
+    print(request['updatedRange'])
+    print("=== This saved on google sheet ===\n")
 
 
 
