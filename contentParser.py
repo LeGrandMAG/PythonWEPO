@@ -277,12 +277,12 @@ def Collect(r, t):
             postDetail = l[0].find_element(By.XPATH,".//div[@class='_5rgt _5nk5 _5msi']").text
             postLink = l[0].find_element(By.XPATH,".//a[@class='_5msj']").get_attribute("href")
         else:
-            postLink = ""
+            postLink = "No link"
         #Let's shorten the post link 
         numberOfSlash = 0
         temp = []
 
-        if len(postLink) >1:
+        if postLink!= "No link":
             for t in postLink:
 
                 if numberOfSlash ==7:
@@ -299,18 +299,18 @@ def Collect(r, t):
         # We will save the retrieved data into the post object and save it in our list.
         exist = False
         #check if the link already exist in the list of posts from the google sheet
-        for elem in values:
-                if postLink == elem[2]:
-                    print(f"{elem[2]} already exists")
+        for l in range(len(values)-2):
+                print(f"{l}\n")
+                if postLink == values[l][2] and postDetail == values[l][1]:
+                    print(f"{values[l][2]} already exists")
 
                     exist = True
                     break
-        
         #check if it exist in the temporary list of posts.
         if exist==False:
             for x in post:
-                if postLink == x[2]:
-                    print(f"{elem[2]} already exists")
+                if postLink == x[2] and postDetail == x[1]:
+                    print(f"{x[2]} already exists")
                     exist = True
                     break
         #add the post to the temporary lists
@@ -367,7 +367,7 @@ def GoDown( num):
 
 
 for n in  range(len(groupLink)-1):
-    OpenLink(groupLink[len(groupLink)-1-n]['link'], sec)
+    OpenLink(groupLink[n]['link'], sec)
     time.sleep(3)
     #l = driver.find_elements(By.ID,"mobile_login_bar")
     #s = len(l)
@@ -389,7 +389,11 @@ for n in  range(len(groupLink)-1):
     if(youMust == "You must log in first." or yy in loog):
         FbLogin(sec)
         time.sleep(3)
-        sentence = driver.find_element(By.CLASS_NAME, "_6j_c").text
+        try:
+            sentence = driver.find_element(By.CLASS_NAME, "_6j_c").text
+        except:
+            sentence= "error"
+            driver.refresh()
         if sentence == "Contenu introuvable":   
             print(f"Group Name: {sentence}")
             continue
