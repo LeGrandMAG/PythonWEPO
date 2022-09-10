@@ -46,7 +46,7 @@ def give_emoji_free_text(text):
 
 
 def del_stopword(text):
-    stopWordList = ['à','et','en', 'détail', 'contactez', 'nous', 'suis', 'un', 'peu', 'de', 'problème', 'proposez', 'num', ',','!', '?', 'show' ]
+    stopWordList = ['à','et','en', 'détail', 'contactez', 'nous', 'suis', 'un', 'peu', 'de', 'problème', 'proposez', 'num', ',','!', '?', 'show', 'app', 'promotion', 'semaine', 'ensemble']
     clean_text = ' '.join([str for str in text.split() if any(i in str for i in stopWordList)])
     return clean_text
 
