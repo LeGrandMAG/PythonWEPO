@@ -89,39 +89,32 @@ def get_contents(RAWDATA_PATH):
     
     return out
 
+def get_tag(df):
+    tagger = StanfordPOSTagger(model, jar, encoding = 'utf8')
+    out = []
+    for line in df['raw']:
+        blob = TextBlob(line)
+        res = tagger.tag(blob.split())
+        temp = []
+        for i in range(len(res)):
+            if res[i][1] == 'NUM' or res[i][1] == 'NOUN':
+                temp.append(res[i][0])
+        out.append(temp)
+
+    dic = {}
+    dic['words'] = out
+    df = pd.DataFrame(dic, dtype='object')
+    # df.to_excel("data/outputData/outputData_nounOnly.xlsx")
+    
+    return df
+
+
+
 RAWDATA_PATH = "data/rawData/facebookData.xlsx"
 df = get_contents(RAWDATA_PATH)
 
-tagger = StanfordPOSTagger(model, jar, encoding = 'utf8')
 
-
-
-# blob = TextBlob(df['raw'][0])
-# res = tagger.tag(blob.split())
-
-# temp = []
-# print(res)
-# for i in range(len(res)):
-#     if res[i][1] == 'NUM' or res[i][1] == 'NOUN':
-#         temp.append(res[i][0])
-# print(temp)
-
-out = []
-for line in df['raw']:
-    blob = TextBlob(line)
-    res = tagger.tag(blob.split())
-    temp = []
-    for i in range(len(res)):
-        if res[i][1] == 'NUM' or res[i][1] == 'NOUN':
-            temp.append(res[i][0])
-    out.append(temp)
-
-dic = {}
-dic['words'] = out
-df = pd.DataFrame(dic, dtype='object')
-df.to_excel("data/outputData/outputData_nounOnly.xlsx")
-
-
+#################################### legacy ####################################
 #draft
 def old_identifier():
     price = []
