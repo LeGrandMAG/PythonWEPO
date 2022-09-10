@@ -9,6 +9,14 @@ from nltk.corpus import stopwords
 import re
 import emoji
 
+from nltk.tag import StanfordPOSTagger
+from textblob import TextBlob
+import os
+jar = 'C:/Users/KING-K-S/pythonWEPO/stanford-tagger-4.2.0/stanford-postagger-full-2020-11-17/stanford-postagger.jar'
+model = 'C:/Users/KING-K-S/pythonWEPO/stanford-tagger-4.2.0/stanford-postagger-full-2020-11-17/models/french-ud.tagger'
+os.environ['JAVAHOME'] = 'C:/Program Files (x86)/Java/jre1.8.0_341'
+
+
 # nltk.download('stopwords')
 # nltk.download('punkt')
 
@@ -44,7 +52,7 @@ def give_emoji_free_text(text):
     clean_text = ' '.join([str for str in text.split() if not any(i in str for i in emoji_list)])
     return clean_text
 
-
+#remove stopwords
 def del_stopword(text):
     stopWordList = ['à','et','en', 'détail', 'contactez', 'nous', 'suis', 'un', 'peu', 'de', 'problème', 'proposez', 'num', ',','!', '?', 'show', 'app', 'promotion', 'semaine', 'ensemble']
     clean_text = ' '.join([str for str in text.split() if any(i in str for i in stopWordList)])
@@ -81,28 +89,60 @@ def get_contents(RAWDATA_PATH):
     
     return out
 
-RAWDATA_PATH = "facebookData.xlsx"
+RAWDATA_PATH = "data/rawData/facebookData.xlsx"
 df = get_contents(RAWDATA_PATH)
-# df.to_csv("facebookData")
-price = []
-product = []
-memory = []
-battery = []
 
-product_list = ['iphone', '5s', '6','6s','6+', '6s+', '7', '7+', '8',' 8+', 'se', 'x', 'xs', 'max', 'xr', '11','pro', 'promax', '12' ,'mini', 'spark', 's16', 's8', 'samsung', 'a36']
+tagger = StanfordPOSTagger(model, jar, encoding = 'utf8')
 
-for line in df["word"]:
-    price.append([text for text in line if '$' in text])
-    product.append([text for text in line if any(i in text for i in product_list) ])
-    # [text for text in line if any(i in str for i in stopWordList)]
-    memory.append([text for text in line if 'gb' in text])
-    battery.append([text for text in line if '%' in text])
+
+
+# blob = TextBlob(df['raw'][0])
+# res = tagger.tag(blob.split())
+
+# temp = []
+# print(res)
+# for i in range(len(res)):
+#     if res[i][1] == 'NUM' or res[i][1] == 'NOUN':
+#         temp.append(res[i][0])
+# print(temp)
+
+out = []
+for line in df['raw']:
+    blob = TextBlob(line)
+    res = tagger.tag(blob.split())
+    temp = []
+    for i in range(len(res)):
+        if res[i][1] == 'NUM' or res[i][1] == 'NOUN':
+            temp.append(res[i][0])
+    out.append(temp)
 
 dic = {}
-dic["price"] = price
-dic["product"] = product
-dic["memory"] = memory
-dic["battery"] = battery
+dic['words'] = out
+df = pd.DataFrame(dic, dtype='object')
+df.to_excel("data/outputData/outputData_nounOnly.xlsx")
 
-df = pd.DataFrame(dic, dtype="object")
-df.to_excel("outputData.xlsx")
+
+#draft
+def old_identifier():
+    price = []
+    product = []
+    memory = []
+    battery = []
+
+    product_list = ['iphone', '5s', '6','6s','6+', '6s+', '7', '7+', '8',' 8+', 'se', 'x', 'xs', 'max', 'xr', '11','pro', 'promax', '12' ,'mini', 'spark', 's16', 's8', 'samsung', 'a36']
+
+    for line in df["word"]:
+        price.append([text for text in line if '$' in text])
+        product.append([text for text in line if any(i in text for i in product_list) ])
+        # [text for text in line if any(i in str for i in stopWordList)]
+        memory.append([text for text in line if 'gb' in text])
+        battery.append([text for text in line if '%' in text])
+
+    dic = {}
+    dic["price"] = price
+    dic["product"] = product
+    dic["memory"] = memory
+    dic["battery"] = battery
+
+    df = pd.DataFrame(dic, dtype="object")
+
