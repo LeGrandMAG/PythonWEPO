@@ -12,6 +12,7 @@ import emoji
 from nltk.tag import StanfordPOSTagger
 from textblob import TextBlob
 import os
+
 jar = 'C:/Users/KING-K-S/pythonWEPO/stanford-tagger-4.2.0/stanford-postagger-full-2020-11-17/stanford-postagger.jar'
 model = 'C:/Users/KING-K-S/pythonWEPO/stanford-tagger-4.2.0/stanford-postagger-full-2020-11-17/models/french-ud.tagger'
 os.environ['JAVAHOME'] = 'C:/Program Files (x86)/Java/jre1.8.0_341'
@@ -54,8 +55,8 @@ def give_emoji_free_text(text):
 
 #remove stopwords
 def del_stopword(text):
-    stopWordList = ['à','et','en', 'détail', 'contactez', 'nous', 'suis', 'un', 'peu', 'de', 'problème', 'proposez', 'num', ',','!', '?', 'show', 'app', 'promotion', 'semaine', 'ensemble']
-    clean_text = ' '.join([str for str in text.split() if any(i in str for i in stopWordList)])
+    stopWordList = ['*','à','et','en', 'détail', 'contactez', 'nous', 'suis', 'un', 'peu', 'de', 'problème', 'proposez', 'num', ',','!', '?', 'show', 'app', 'promotion', 'semaine', 'ensemble']
+    clean_text = ' '.join([str for str in text.split() if not any(i in str for i in stopWordList)])
     return clean_text
 
 
@@ -70,6 +71,7 @@ def get_contents(RAWDATA_PATH):
         line = line.lower()
         line = give_emoji_free_text(line)
         line = remove_emoji(line)
+        line = del_stopword(line)
         temp.append(line)
 
     out = pd.DataFrame(temp, columns=['content'], dtype='string')
@@ -108,10 +110,9 @@ def get_tag(df):
     
     return df
 
-
-
 RAWDATA_PATH = "data/rawData/facebookData.xlsx"
 df = get_contents(RAWDATA_PATH)
+df.to_csv("data/inputData/facebookData")
 
 
 #################################### legacy ####################################

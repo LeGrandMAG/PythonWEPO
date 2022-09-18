@@ -12,11 +12,7 @@ import json
 
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
-
-
 from google.oauth2 import service_account
-
-
 
 SERVICE_ACCOUNT_FILE = 'keys.json'
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
@@ -26,15 +22,8 @@ creds = service_account.Credentials.from_service_account_file(
         SERVICE_ACCOUNT_FILE, scopes=SCOPES)
 
 
-
-
 # The ID and range of a sample spreadsheet.
 SAMPLE_SPREADSHEET_ID = '14PXpbLAp3_J3dB8-CCLWIYm8q-RN2JJ5kIZRF7TuJYQ'
-
-
-
-
-
 
 service = build('sheets', 'v4', credentials=creds)
 
@@ -185,9 +174,6 @@ driver = webdriver.Chrome('C:/Users/maglo/chromedriver.exe',options=chrome_optio
 wait = WebDriverWait(driver, 2)
 
 
-
-
-1
 #This function loop through the facebook links and open each of them
 def OpenLink(li, num):
         print("Now processing Page: "+"\n"+ li)
@@ -338,11 +324,6 @@ def Collect(r, t):
     print("\n")
 
     #IF the post is not empty add it in the google drive.
-    
-    
-        
-
-
 
 #This is a function to save all the data retrieved a a Json file.
 def SaveOnGoogleSheet(fbData):  
@@ -353,14 +334,10 @@ def SaveOnGoogleSheet(fbData):
     print("=== This saved on google sheet ===\n")
 
 
-
-
 #This is a function to go down the page.
 def GoDown( num):
     webdriver.ActionChains(driver).key_down(Keys.END).perform()
     time.sleep(3)
-
-
 
 
 #This is the loop that will help us loop through all the facebook groups, collect the data and save it into our Json file.
@@ -423,20 +400,9 @@ for n in  range(len(groupLink)-1):
             Collect(sec,scroll)
         time.sleep(2)
 
-    
-
-
 
 driver.close()  
 print("Driver is closed\n")
-
-
-
-
-
-
-
-
 
 
 #open the webpage ( I am using the mobile.facebook because it has less functionalilty so it will be "harder" for facebook bot to track us?!)
