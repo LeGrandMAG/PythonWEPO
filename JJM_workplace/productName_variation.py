@@ -1,4 +1,8 @@
 import re
+<<<<<<< HEAD
+=======
+from unittest import result
+>>>>>>> 4c660968a7a803479eeb7b23130780044db0c03a
 
 samsung_raw = """Samsung Galaxy S6
 Samsung Galaxy S7
@@ -280,11 +284,19 @@ tecno = {
 }
 
 samsung_variation = {
+<<<<<<< HEAD
     "company": {"Samsung": []},
     "model": {"Galaxy": [],
               "Galaxy Note": [],
               "Galaxy Tab": [],
               "Galaxy Z": []},
+=======
+    "company": {"Samsung": ['Samsung', 'Sam', 'Sm', 'Smg', 'Ss', 'Ssg', 'Samsung', 'Sam', 'Sm', 'Smg', 'Ss', 'Ssg', 'samsung']},
+    "model": {"Galaxy": ['Galaxy', 'Gal', 'Glx', 'Glxy', 'Galaxy', 'Galaxy', 'Gal', 'Gal', 'Glx', 'Glx', 'Glxy', 'Glxy', 'galaxy'],
+              "Galaxy Note": ['Not', 'GalaxyNot', 'Note', 'GalaxyNote', 'GalNot', 'Glx Nte', 'Nte', 'Gal Note', 'GlxNte', 'GlxNt', 'GalNote', 'Nt', 'Gal Not', 'Glx Nt', 'Galaxy Note', 'Galaxy Not'],
+              "Galaxy Tab": ['Galaxy Tab', 'Tb', 'Gal Tab', 'GalTab', 'T', 'Glx T', 'Glx Tb', 'GalaxyTab', 'GlxTb', 'Tab', 'GlxT'],
+              "Galaxy Z": ['GalZ', 'Z', 'Galaxy Z', 'GalaxyZ', 'Glx Z', 'Gal Z', 'GlxZ']},
+>>>>>>> 4c660968a7a803479eeb7b23130780044db0c03a
     "series": ['A01', '8', 'A73', 'A80', 'S8', 'S7', 'A71', 'A51', 'A40', 'A70',
                'A6', 'A7', 'A41', 'Fold', 'A20', '7', '9', '10', 'A2', 'A3',
                'A60', 'S9', 'A33', 'S22', 'A5', 'A12', 'A8', 'Edge', '5',
@@ -297,6 +309,7 @@ samsung_variation = {
                 'Lite 7.0 VE', '8.4']
 }
 
+<<<<<<< HEAD
 
 # make variation
 def generate_variation(str):
@@ -327,6 +340,115 @@ for word in temp:
     for a in word:
         out.append(a)
 print(out)
+=======
+#퍼뮤테이션 알고리즘// 재귀함수를 이용한 조합 만들기 출처, https://kjhoon0330.tistory.com/15
+def combination(arr, n):
+    out = []
+    if n == 0:
+        return [[]]
+    for i in range(len(arr)):
+        t = arr[i]
+        for e in t:
+            for rest in combination(arr[i+1:], n-1):
+                out.append([e] + rest)
+    return out
+
+# make variation
+def generate_variation(str, line):
+    variations = []
+    splited = re.split("\s", str)
+
+    # 1st rule : 첫 3글자
+    arr = []
+    for w in splited:
+        t = []
+        t.append(w)
+        # variations.append(w)
+
+        t.append(w[:3])
+        # variations.append(w[:3])
+        arr.append(t)
+    f = combination(arr, len(arr))
+    for words in f:
+        t = ""
+        for w in words:
+            t=t+w
+        variations.append(t)
+
+    # 2rd rule : 모음앞에 있는 단어 조합
+    temp = re.findall(r"(\w{0,2})[aeiouy]", str, re.IGNORECASE) # 모음 앞에 있는 녀석들 추출
+    arr = []
+    for word in temp:
+        t = []
+        for a in word:
+            t.append(a)
+        arr.append(t)
+    f = combination(arr, len(arr))
+
+    for words in f:
+        t = ""
+        for w in words:
+            t=t+w
+        variations.append(t)
+        variations.append(t+str[-1])
+
+    #대문자 기준으로 나누기 + 붙여쓰기, 띄어쓰기 모두 만들기
+    arr = []
+    for word in variations:
+        t=re.findall(r"([A-Z][a-z]*)", word)
+        stemp = ""
+        for li in t:
+            arr.append(li)
+            stemp = stemp + " " + li
+            stemp = re.findall("\s*(.+)", stemp)[0]
+            arr.append(stemp)
+
+    variations = variations + arr
+
+    ##### line에서 찾기 #####
+    
+    # 첫글자와 끝 글자가 같은 문자
+    variations = variations + re.findall(r"{}\w*{}".format(str[0], str[-1]), line, re.IGNORECASE)
+
+    # # lower
+    # arr = []
+    # for var in variations:
+    #     arr.append(var.lower())
+    # variations = variations + arr
+        
+    # # variation하고 같은 문자 찾기
+    # output = []
+    # for rule in variations:
+    #     r1 = r"{}".format(rule.lower())
+    #     t = re.findall(r1, line, re.IGNORECASE)
+    #     if t:
+    #         output.append(t[0])
+    # output = list(set(output))
+    return variations
+
+
+##################### trial #####################
+line = "samsung galaxy s9+ (fissuré ) 40$ à discuter 0899125152"
+
+out = generate_variation("Galaxy", line)
+print(out)
+
+for i in samsung["model"]:
+    out3 = []
+    out2 = generate_variation(i, line)
+    for o2 in out2:
+        if not o2 in out:
+            out3.append(o2)
+    out3 = list(set(out3))
+    print(out3)
+
+
+
+
+
+
+
+>>>>>>> 4c660968a7a803479eeb7b23130780044db0c03a
 
 # # 이거는 tecno
 # splited = re.split("\n", tecno_raw)
