@@ -2,7 +2,7 @@ import re
 import pandas as pd
 import itertools
 
-## raw data form
+## raw data form // 규칙 1) company, brand, model, version 은 띄어쓰기로 구분 // model 안에서는 Camel과 숫자로 구분
 formalProductNames = """Samsung Galaxy S6
     Samsung Galaxy S7
     Samsung Galaxy S8
@@ -28,7 +28,7 @@ formalProductNames = """Samsung Galaxy S6
     Samsung Galaxy S225G
     Samsung Galaxy S22Plus 5G
     Samsung Galaxy S22Ultra 5G
-    Samsung Galaxy S20FE 2022
+    Samsung Galaxy S20Fe 2022
     Samsung Galaxy A5Duos
     Samsung Galaxy A5Duos
     Samsung Galaxy A3
@@ -38,21 +38,21 @@ formalProductNames = """Samsung Galaxy S6
     Samsung Galaxy A7Duos
     Samsung Galaxy A8
     Samsung Galaxy A8Duos
-    Samsung Galaxy A3 (2016)
-    Samsung Galaxy A5 (2016)
-    Samsung Galaxy A7 (2016)
-    Samsung Galaxy A9 (2016)
-    Samsung Galaxy A9Pro (2016)
-    Samsung Galaxy A8 (2016)
-    Samsung Galaxy A3 (2017)
-    Samsung Galaxy A5 (2017)
-    Samsung Galaxy A7 (2017)
-    Samsung Galaxy A6 (2018)
-    Samsung Galaxy A6Plus (2018)
+    Samsung Galaxy A3 2016
+    Samsung Galaxy A5 2016
+    Samsung Galaxy A7 2016
+    Samsung Galaxy A9 2016
+    Samsung Galaxy A9Pro 2016
+    Samsung Galaxy A8 2016
+    Samsung Galaxy A3 2017
+    Samsung Galaxy A5 2017
+    Samsung Galaxy A7 2017
+    Samsung Galaxy A6 2018
+    Samsung Galaxy A6Plus 2018
     Samsung Galaxy A8Star 
     Samsung Galaxy A9Star
-    Samsung Galaxy A7 (2018)
-    Samsung Galaxy A9 (2018)
+    Samsung Galaxy A7 2018
+    Samsung Galaxy A9 2018
     Samsung Galaxy A6s
     Samsung Galaxy A8s
     Samsung Galaxy A10
@@ -78,13 +78,13 @@ formalProductNames = """Samsung Galaxy S6
     Samsung Galaxy A31
     Samsung Galaxy A51 5G
     Samsung Galaxy A41
-    Samsung Galaxy A Quantum
+    Samsung Galaxy AQuantum
     Samsung Galaxy A21s
     Samsung Galaxy A71 5G
     Samsung Galaxy A21
     Samsung Galaxy A01Core
-    Samsung Galaxy A71UW 5G 
-    Samsung Galaxy A51UW 5G 
+    Samsung Galaxy A71Uw 5G 
+    Samsung Galaxy A51Uw 5G 
     Samsung Galaxy A42 5G
     Samsung Galaxy A12
     Samsung Galaxy A02s
@@ -108,12 +108,12 @@ formalProductNames = """Samsung Galaxy S6
     Samsung Galaxy A53 5G
     Samsung Galaxy A73 5G
     Samsung Galaxy NotePro 12.2
-    Samsung Galaxy Note3 Neo
-    Samsung Galaxy Note3 Neo Duos
+    Samsung Galaxy Note3Neo
+    Samsung Galaxy Note3NeoDuos
     Samsung Galaxy NotePro 12.2 5G
     Samsung Galaxy NotePro 12.2 LTE
     Samsung Galaxy Note4
-    Samsung Galaxy Note4 Duos
+    Samsung Galaxy Note4Duos
     Samsung Galaxy NoteEdge
     Samsung Galaxy Note5Duos
     Samsung Galaxy Note5
@@ -123,8 +123,8 @@ formalProductNames = """Samsung Galaxy S6
     Samsung Galaxy Note9
     Samsung Galaxy Note10
     Samsung Galaxy Note10 5G
-    Samsung Galaxy Note10 Plus
-    Samsung Galaxy Note10 Plus 5G
+    Samsung Galaxy Note10Plus
+    Samsung Galaxy Note10Plus 5G
     Samsung Galaxy Note10Lite
     Samsung Galaxy Note20
     Samsung Galaxy Note20 5G
@@ -205,19 +205,19 @@ formalProductNames = """Samsung Galaxy S6
     Apple iPhone 6Plus
     Apple iPhone 6S
     Apple iPhone 6SPlus
-    Apple iPhone SE 1st gen
+    Apple iPhone Se 1st gen
     Apple iPhone 7
     Apple iPhone 7Plus
     Apple iPhone 8
     Apple iPhone 8Plus
     Apple iPhone X
-    Apple iPhone XR
-    Apple iPhone XS
-    Apple iPhone XSMax
+    Apple iPhone Xr
+    Apple iPhone Xs
+    Apple iPhone XsMax
     Apple iPhone 11
     Apple iPhone 11Pro
     Apple iPhone 11ProMax
-    Apple iPhone SE 2nd gen
+    Apple iPhone Se 2nd gen
     Apple iPhone 12
     Apple iPhone 12Mini
     Apple iPhone 12Pro
@@ -226,7 +226,7 @@ formalProductNames = """Samsung Galaxy S6
     Apple iPhone 13Mini
     Apple iPhone 13Pro
     Apple iPhone 13ProMax
-    Apple iPhone SE 3rd gen
+    Apple iPhone Se 3rd gen
     Apple iPhone 14
     Apple iPhone 14Plus
     Apple iPhone 14Pro
@@ -239,12 +239,12 @@ formalProductNames = """Samsung Galaxy S6
     Tecno Phantom6Plus
     Tecno Pouvoir
     Tecno Pop
-    Tecno SparkCM
+    Tecno SparkCm
     Tecno Spark
-    Tecno CamonCM
+    Tecno CamonCm
     Tecno F2 LTE
-    Tecno CamonCXAir
-    Tecno CamonCX
+    Tecno CamonCxAir
+    Tecno CamonCx
     Tecno Pouvoir2
     Tecno PopPro
     Tecno PopS
@@ -272,12 +272,12 @@ variation = {
     'phantom': ['phantom', 'pantom', 'pahntom'],
     'pouvoir': ['pvr', 'pouvoir', 'pouvor', 'povir', 'pouvior', 'povoir'],
 }
-# variarion should be modified by human
+# variarion should be modified by human // 0=company, 1=brand, 2=model, 3=version
 tag = {
-    "company": ['Samsung', 'Apple', 'Tecno'],
-    "brand": ['Galaxy', 'iPhone'],
-    "model": [],
-    "version": []
+    "0": ['Samsung', 'Apple', 'Tecno', 'samsung', 'apple', 'tecno'],
+    "1": ['Galaxy', 'iPhone', 'galaxy', 'iphone'],
+    "2": [],
+    "3": []
 }
 ## generate variation for word longer than 5words
 # 퍼뮤테이션 알고리즘// 재귀함수를 이용한 조합 만들기 출처, https://kjhoon0330.tistory.com/15
@@ -354,7 +354,8 @@ def generate_variation(str, line):
 
 ############### Start! ###############
 
-# # if no variation, make new variation
+# # if no variation, make new variation 
+# #// 여기는 맨처음에 variation 만드는건데, 성능이 별로임 => 나중에 Soundex, Metaphone 알고리즘 이용 => jellyfish
 # rawDf = pd.read_csv("facebookData")
 # variation = {}
 # print(var)
@@ -371,7 +372,7 @@ def generate_variation(str, line):
 
 # generate tag and candidates
 
-productMap = {}
+productMap = {} # 제품명 매핑을 위한 dic  0=company, 1=brand, 2=model, 3=version
 
 # rawData loaded / after textPreprocessing
 rawDf = pd.read_csv("data/inputData/facebookData")
@@ -386,44 +387,77 @@ for text in formalNameList:
     words = re.split('\s', text)
     
     tempWords = []
-    # remove company & brand name
+    # remove company(0) & brand(1) name
     for w in words:
-        if w in tag['company']:
-            productDic['company'] = w #add company name to product list
+        if w in tag['0']:
+            productDic['0'] = w.lower() #add company(0) name to product list
             continue
-        elif w in tag['brand']:
-            productDic['brand'] = w #add company name to product list
+        elif w in tag['1']:
+            productDic['1'] = w.lower() #add brand(1) name to product list
             continue
         else:
             tempWords.append(w)
+
     modelingrediant = []
+    # modelingrediantForTag = []
+    
     modelCandidates = []
-    # model 분해
-    matches = re.finditer('.+?(?:(?<=[\w])(?=[A-Z0-9])|(?<=[A-Z])(?=[A-Z0-9])|$)', tempWords[0])
+    # modelCandidatesForTag = []
+    
+    # model 요소 분해
+    matches = re.finditer('.+?(?:(?<=[A-Za-z0-9])(?=[A-Z])|(?<=[A-Za-z])(?=[A-Z0-9])|$)', tempWords[0]) # 대문자(camel), 숫자 구분 ★★★
+    # matchesForTag = re.finditer('.+?(?:(?<=[\w])(?=[A-Z])|(?<=[A-Z])(?=[A-Z])|$)', tempWords[0]) # 대문자(camel)만 구분
+    
+    # more detailed model variation for each products 
+
+    # simple model variation for tag 
+    
+    # # 태깅을 위한 자료 만들기
+    # for mtag in matchesForTag:
+    #     modelingrediantForTag.append(mtag.group().lower())
+
+    # if len(modelingrediantForTag) >=2:
+    #     for ran in range(len(modelingrediantForTag)):
+    #         for c in itertools.combinations(modelingrediantForTag, ran+1):
+    #             modelCandidatesForTag.append(' '.join(c))
+    #             modelCandidatesForTag.append(''.join(c))
+
+    # tempMCforTag = []
+    # for mcTag in modelCandidatesForTag:
+    #     mcVarTag = re.sub('ultra','u', mcTag)
+    #     tempMCforTag.append(mcVarTag)
+    #     mcVarTag = re.sub('pro', 'p', mcTag)
+    #     tempMCforTag.append(mcVarTag)
+    #     mcVarTag = re.sub('plus', '+', mcTag)
+    #     tempMCforTag.append(mcVarTag)
+    # modelCandidatesForTag = list(set(modelCandidatesForTag + tempMCforTag))
+
+    # 제품 매핑을 위한 자료 만들기
     for m in matches:
-        modelingrediant.append(m.group())
+        modelingrediant.append(m.group().lower()) 
+        # print(modelingrediant)
     if len(modelingrediant) >=2:
         for ran in range(len(modelingrediant)):
-            if ran > 0:
-                for c in itertools.combinations(modelingrediant, ran+1):
-                    modelCandidates.append(' '.join(c))
-                    modelCandidates.append(''.join(c))
-        
+            for c in itertools.combinations(modelingrediant, ran+1):
+                modelCandidates.append(' '.join(c))
+                modelCandidates.append(''.join(c))
+                    
     tempMC = []
     for mc in modelCandidates:
-        mcVar = re.sub('Ultra','U', mc)
+        mcVar = re.sub('ultra','u', mc)
         tempMC.append(mcVar)
-        mcVar = re.sub('Pro', 'P', mc)
+        mcVar = re.sub('pro', 'p', mc)
         tempMC.append(mcVar)
-        mcVar = re.sub('Plus', '+', mc)
+        mcVar = re.sub('plus', '+', mc)
         tempMC.append(mcVar)
     modelCandidates = list(set(modelCandidates + tempMC))
-    
-    productDic['model'] = modelCandidates
+
+    productDic['2'] = modelCandidates #매핑을 위해 model(2) 자료 넣기
     if len(tempWords) >=2:
-        productDic['version'] = tempWords[1:]
+        productDic['3'] = [i.lower() for i in tempWords[1:]] #매핑을 위해 version(3) 자료 넣기
     
-    productMap[text] = productDic
+    productMap[text] = productDic #제품별로 넣기
+    
     # # make possible model combinations
     # candidatesList = []
     # if len(tempWords) >= 2:
@@ -438,12 +472,15 @@ for text in formalNameList:
     #                 candidatesList.append(''.join(com))
     #     candidates[text] = list(set(candidatesList))
 
-# allocate tag
-    tag["model"] = tag["model"] + list(set(modelCandidates))
-    tag["version"] = tag["version"] + list(set(tempWords[1:]))
+# allocate tag 0=company, 1=brand, 2=model, 3=version
+    tag["2"] = tag["2"] + modelCandidates
+    tag["3"] = tag["3"] + [i.lower() for i in tempWords[1:]]
 
+tag["2"] = list(set(tag["2"]))
+tag["3"] = list(set(tag["3"]))
 
-# ## checking point 
+## checking point 
+# print(tag)
 # for name in productMap:
 #     if len(productMap[name]) > 1:
 #         print("this is name : ", name)
@@ -453,16 +490,17 @@ for text in formalNameList:
 # variation => fomal name 
 changedToFomalname = []
 for line in rawDf['raw']:
-    temp = re.split('\s', str(line))
+    templi = re.split('\s', str(line))
     for realname in variation:
         for var in variation[realname]:
             rule = r'{}'
-            for i in range(len(temp)):
-                if re.search(rule.format(var), temp[i], re.IGNORECASE):
-                    if len(var) == len(temp[i]):
-                        temp[i] = realname
-    changedToFomalname.append(' '.join(temp).lower())
+            for i in range(len(templi)):
+                if re.search(rule.format(var), templi[i], re.IGNORECASE):
+                    if len(var) == len(templi[i]):
+                        templi[i] = realname
+    changedToFomalname.append(' '.join(templi).lower())
 
+# #check point
 # for i in range(len(rawDf['raw'])):
 #     print(rawDf['raw'][i])
 #     print(changedToFomalname[i])
@@ -470,19 +508,19 @@ for line in rawDf['raw']:
 
 ################################ product tagging ################################ 태그를 이용하자!!
 docs = []
-# functionWords = ['+', '.', '*', '?']
+functionWords = ['+', '.', '*', '?']
 for line in changedToFomalname:
-    temp = re.split('\s', line)
+    tempArr = re.split('\s', line)
     text = []
-    for word in temp:
+    for word in tempArr:
         x = 0
         for tagName in tag:
             for t in tag[tagName]:
                 r = r"{}"
-                if re.search(r.format(t), word) and t == word:
-                    text.append((word, 'N', tagName))
-                    x=1
-                elif t == word:
+                # if re.search(r.format(t), word) and t == word:
+                #     text.append((word, 'N', tagName))
+                #     x=1
+                if t == word:
                     text.append((word, 'N', tagName))
                     x=1
         if x == 0:
@@ -496,16 +534,24 @@ productFromDocs = []
 for labeled in docs:
     productName = []
     for tuples in labeled:
-
         if tuples[1] == 'N':
             productName.append((tuples[0], tuples[2]))
                                
     productFromDocs.append(list(set(productName)))
 
-# for a in range(len(productFromDocs)):
-#     print(lines[a], productFromDocs[a])
+
+for i in range(len(productFromDocs)):
+    if len(productFromDocs[i]) >= 2:
+        productFromDocs[i].sort(key = lambda x : x[1])
+    print(changedToFomalname[i], productFromDocs[i])
 
 # ################################ mapping to formal product ################################
+
+
+
+fomalProductList = []
+# company mapping 
+    
 
 # fomalName = []
 # for token in productFromDocs:
