@@ -3,7 +3,7 @@ import pandas as pd
 import itertools
 
 ## raw data form // 규칙 1) company, brand, model, version 은 띄어쓰기로 구분 // model 안에서는 Camel과 숫자로 구분
-formalProductNames = """Samsung Galaxy S6
+fomalProductNames = """Samsung Galaxy S6
     Samsung Galaxy S7
     Samsung Galaxy S8
     Samsung Galaxy S8Plus
@@ -359,8 +359,8 @@ def generate_variation(str, line):
 # rawDf = pd.read_csv("facebookData")
 # variation = {}
 # print(var)
-# formalNameList = re.split("\n", formalProductNames)
-# for text in formalNameList:
+# fomalNameList = re.split("\n", fomalProductNames)
+# for text in fomalNameList:
 #     text = text.strip()
 #     words = re.split('\s', text)
 #     for w in words:
@@ -380,8 +380,8 @@ rawDf = pd.read_csv("data/inputData/facebookData")
 
 ################################ generate variations and tagging ################################
 
-formalNameList = re.split("\n", formalProductNames)
-for text in formalNameList:
+fomalNameList = re.split("\n", fomalProductNames)
+for text in fomalNameList:
     productDic = {}
     text = text.strip()
     words = re.split('\s', text)
@@ -555,14 +555,52 @@ for combi in modelCombination:
                             tempFomal.append(name)
     fomalProductList.append(tempFomal)
 
-# check point
+# # check point
+# for i in range(len(fomalProductList)):
+#     if len(productFromDocs[i]) >= 2:
+#         productFromDocs[i].sort(key = lambda x : x[1])
+#     print(modelCombination[i], fomalProductList[i])
+
+
+## 아닌것들 제외하기
+# 1단계 회사명 확인
+finalProductList = []
+
 for i in range(len(fomalProductList)):
-    if len(productFromDocs[i]) >= 2:
-        productFromDocs[i].sort(key = lambda x : x[1])
-    print(modelCombination[i], fomalProductList[i])
+    point = 0
+    tempFomalList = []
+    if len(fomalProductList[i]) > 1:
+        for fomalproduct in fomalProductList[i]:
+            tokenProduct = re.split("\s", fomalproduct)
+            
+            tempTokens = []
+            for tkn in tokenProduct:
+                if tkn in tag[0]:
+                    if tkn.lower in modelCombination[i]: # 회사명이 있으면 point +1
+                        point =+ 1
+                elif tkn in tag[1]:
+                    if tkn.lower in modelCombination[i]: # 모델명이 있으면 point +1
+                        point =+ 1
+                else:
+                    tempTokens.append(tkn)
+            
+            tList = re.finditer('.+?(?:(?<=[A-Za-z0-9])(?=[A-Z])|(?<=[A-Za-z])(?=[A-Z0-9])|$)', tempTokens[0])
+            print(modelCombination[i])
+            print("tempTokens : ", tempTokens)
+            for tm in tList:
+                if tm.group().lower() in modelCombination[i]:
+                    point =+ 1
+            
+            tempFomalList.append((fomalproduct, point))
+        
+    finalProductList.append(tempFomalList)
 
+# for i in range(len(fomalProductList)):
+#     if len(productFromDocs[i]) >= 2:
+#         productFromDocs[i].sort(key = lambda x : x[1])
+#     print(modelCombination[i], finalProductList[i])
 
-# 아닌것들 제외하기
+        
 # fomalName = []
 # for token in productFromDocs:
 #     compareList = []
