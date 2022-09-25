@@ -274,10 +274,10 @@ variation = {
 }
 # variarion should be modified by human // 0=company, 1=brand, 2=model, 3=version
 tag = {
-    "0": ['Samsung', 'Apple', 'Tecno', 'samsung', 'apple', 'tecno'],
-    "1": ['Galaxy', 'iPhone', 'galaxy', 'iphone'],
-    "2": [],
-    "3": []
+    0: ['Samsung', 'Apple', 'Tecno', 'samsung', 'apple', 'tecno'],
+    1: ['Galaxy', 'iPhone', 'galaxy', 'iphone'],
+    2: [],
+    3: []
 }
 ## generate variation for word longer than 5words
 # 퍼뮤테이션 알고리즘// 재귀함수를 이용한 조합 만들기 출처, https://kjhoon0330.tistory.com/15
@@ -389,11 +389,11 @@ for text in formalNameList:
     tempWords = []
     # remove company(0) & brand(1) name
     for w in words:
-        if w in tag['0']:
-            productDic['0'] = w.lower() #add company(0) name to product list
+        if w in tag[0]:
+            productDic[0] = [w.lower()] #add company(0) name to product list
             continue
-        elif w in tag['1']:
-            productDic['1'] = w.lower() #add brand(1) name to product list
+        elif w in tag[1]:
+            productDic[1] = [w.lower()] #add brand(1) name to product list
             continue
         else:
             tempWords.append(w)
@@ -452,9 +452,9 @@ for text in formalNameList:
         tempMC.append(mcVar)
     modelCandidates = list(set(modelCandidates + tempMC))
 
-    productDic['2'] = modelCandidates #매핑을 위해 model(2) 자료 넣기
+    productDic[2] = modelCandidates #매핑을 위해 model(2) 자료 넣기
     if len(tempWords) >=2:
-        productDic['3'] = [i.lower() for i in tempWords[1:]] #매핑을 위해 version(3) 자료 넣기
+        productDic[3] = [i.lower() for i in tempWords[1:]] #매핑을 위해 version(3) 자료 넣기
     
     productMap[text] = productDic #제품별로 넣기
     
@@ -473,11 +473,11 @@ for text in formalNameList:
     #     candidates[text] = list(set(candidatesList))
 
 # allocate tag 0=company, 1=brand, 2=model, 3=version
-    tag["2"] = tag["2"] + modelCandidates
-    tag["3"] = tag["3"] + [i.lower() for i in tempWords[1:]]
+    tag[2] = tag[2] + modelCandidates
+    tag[3] = tag[3] + [i.lower() for i in tempWords[1:]]
 
-tag["2"] = list(set(tag["2"]))
-tag["3"] = list(set(tag["3"]))
+tag[2] = list(set(tag[2]))
+tag[3] = list(set(tag[3]))
 
 ## checking point 
 # print(tag)
@@ -540,18 +540,69 @@ for labeled in docs:
     productFromDocs.append(list(set(productName)))
 
 
-for i in range(len(productFromDocs)):
-    if len(productFromDocs[i]) >= 2:
-        productFromDocs[i].sort(key = lambda x : x[1])
-    print(changedToFomalname[i], productFromDocs[i])
+# for i in range(len(productFromDocs)):
+#     if len(productFromDocs[i]) >= 2:
+#         productFromDocs[i].sort(key = lambda x : x[1])
+#     print(changedToFomalname[i], productFromDocs[i])
 
 # ################################ mapping to formal product ################################
+## 회사명, 브랜드명, 모델명 => 순으로
 
+# company name and brand name mapping // 
+targetList = []
+for tags in productFromDocs:
+    tempTarget = []
+    if tags:
+        for tag in tags:
+            if tag[1] == 0 or tag[1] == 1:
+                for name in productMap: 
+                    try:
+                        if tag[0] in productMap[name][tag[1]]:
+                            tempTarget.append(name)
+                    except:
+                        continue
+            else:
+                continue
+    targetList.append(list(set(tempTarget)))
 
+# #check point
+# for i in range(len(productFromDocs)):
+#     print(changedToFomalname[i], productFromDocs[i])
+#     print(targetList[i])
 
-fomalProductList = []
-# company mapping 
+# model mapping 
+# with out shuffling
+expectedProductList = []
+for i in range(len(productFromDocs)):
+    tempExpectedList = []
+    if productFromDocs[i]:
+        print(productFromDocs[i])
+        for tag in productFromDocs[i]:
+            if tag[1] == 0 or tag[1] == 1:
+                # tempExpectedList = tempExpectedList + targetList[i]
+                continue
+            else:
+                if targetList[i]:
+                    print(targetList[i])
+                    for name in targetList[i]:
+                        try:
+                            if tag[0] in productMap[name][tag[1]]:
+                                tempExpectedList.append(name)
+                        except:
+                            continue
+                else:
+                    for name in productMap:
+                        try:
+                            if tag[0] in productMap[name][tag[1]]:
+                                tempTarget.append(name)
+                        except:
+                            continue
+    expectedProductList.append(list(set(tempExpectedList)))
     
+
+# for i in range(len(expectedProductList)):
+#     print(changedToFomalname[i], productFromDocs[i])
+#     print(expectedProductList[i])
 
 # fomalName = []
 # for token in productFromDocs:
