@@ -1,3 +1,4 @@
+from audioop import reverse
 import re
 import pandas as pd
 import itertools
@@ -17,15 +18,15 @@ fomalProductNames = """Samsung Galaxy S6
     Samsung Galaxy S20Plus
     Samsung Galaxy S20Ultra 5G
     Samsung Galaxy S20Plus 5G
-    Samsung Galaxy S205G
+    Samsung Galaxy S20 5G
     Samsung Galaxy S20Ultra LTE
-    Samsung Galaxy S20FE
-    Samsung Galaxy S20FE 5G
-    Samsung Galaxy S215G
+    Samsung Galaxy S20Fe
+    Samsung Galaxy S20Fe 5G
+    Samsung Galaxy S21 5G
     Samsung Galaxy S21Plus 5G
     Samsung Galaxy S21Ultra 5G
-    Samsung Galaxy S21FE 5G
-    Samsung Galaxy S225G
+    Samsung Galaxy S21Fe 5G
+    Samsung Galaxy S22 5G
     Samsung Galaxy S22Plus 5G
     Samsung Galaxy S22Ultra 5G
     Samsung Galaxy S20Fe 2022
@@ -78,7 +79,7 @@ fomalProductNames = """Samsung Galaxy S6
     Samsung Galaxy A31
     Samsung Galaxy A51 5G
     Samsung Galaxy A41
-    Samsung Galaxy AQuantum
+    Samsung Galaxy Quantum
     Samsung Galaxy A21s
     Samsung Galaxy A71 5G
     Samsung Galaxy A21
@@ -411,12 +412,12 @@ for text in fomalNameList:
     for m in matches:
         modelingrediant.append(m.group().lower()) 
         # print(modelingrediant)
+
     if len(modelingrediant) >=1:
         for ran in range(len(modelingrediant)):
             for p in itertools.permutations(modelingrediant, ran+1):
                 modelCandidates.append(' '.join(p))
                 modelCandidates.append(''.join(p))
-
     tempMC = []
     for mc in modelCandidates:
         mcVar = re.sub('ultra','u', mc)
@@ -563,7 +564,7 @@ for combi in modelCombination:
 
 
 ## 아닌것들 제외하기
-# 1단계 회사명 확인
+# 1단계 scoring
 finalProductList = []
 
 for i in range(len(fomalProductList)):
@@ -571,36 +572,53 @@ for i in range(len(fomalProductList)):
     tempFomalList = []
     if len(fomalProductList[i]) > 1:
         for fomalproduct in fomalProductList[i]:
-            tokenProduct = re.split("\s", fomalproduct)
-            
+            tokenProduct = re.split("\s", fomalproduct.lower())
             tempTokens = []
+            # print(tokenProduct)
+
             for tkn in tokenProduct:
+                # tkn = tkn.lower()
                 if tkn in tag[0]:
-                    if tkn.lower in modelCombination[i]: # 회사명이 있으면 point +1
-                        point =+ 1
+                    if tkn in modelCombination[i]: # 회사명이 있으면 point +1
+                        point = point + 10000
+                    # else:
+                    #     point = point - 20000
                 elif tkn in tag[1]:
-                    if tkn.lower in modelCombination[i]: # 모델명이 있으면 point +1
-                        point =+ 1
+                    if tkn in modelCombination[i]: # 모델명이 있으면 point +1
+                        point = point + 10000
+                    # else:
+                    #     point = point - 20000
                 else:
                     tempTokens.append(tkn)
             
-            tList = re.finditer('.+?(?:(?<=[A-Za-z0-9])(?=[A-Z])|(?<=[A-Za-z])(?=[A-Z0-9])|$)', tempTokens[0])
-            print(modelCombination[i])
-            print("tempTokens : ", tempTokens)
+            tListFind = re.finditer('.+?(?:(?<=[A-Za-z0-9])(?=[A-Z])|(?<=[A-Za-z])(?=[A-Z0-9])|$)', tempTokens[0])
+
+            # print(modelCombination[i])
+            tList=[]
+            for tf in tListFind:
+                tList.append(tf.group())
+ 
+            # print("tempTokens : ", tList)
             for tm in tList:
-                if tm.group().lower() in modelCombination[i]:
-                    point =+ 1
+                if tm in modelCombination[i]:
+                    point = point + 10
+                else:
+                    for model in modelCombination[i]:
+                        if re.search("{}".format(tm), model):
+                            point = point + 1
+                        else:
+                            point = point - 10
             
             tempFomalList.append((fomalproduct, point))
         
     finalProductList.append(tempFomalList)
 
-# for i in range(len(fomalProductList)):
-#     if len(productFromDocs[i]) >= 2:
-#         productFromDocs[i].sort(key = lambda x : x[1])
+# for i in range(len(finalProductList)):
+#     if len(finalProductList[i]) >= 2:
+#         finalProductList[i].sort(key = lambda x : x[1], reverse=True)
 #     print(modelCombination[i], finalProductList[i])
 
-        
+# ## sorting by score
 # fomalName = []
 # for token in productFromDocs:
 #     compareList = []
