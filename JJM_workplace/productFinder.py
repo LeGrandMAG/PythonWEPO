@@ -560,13 +560,13 @@ for combi in modelCombination:
                     if productMap[name][0][0] == 'apple':
                         if word in productMap[name][2]:
                             tempFomal.append(name)
-    fomalProductList.append(tempFomal)
+    fomalProductList.append(list(set(tempFomal)))
 
 # check point
 for i in range(len(fomalProductList)):
     if len(productFromDocs[i]) >= 2:
         productFromDocs[i].sort(key = lambda x : x[1])
-    print(changedToFomalname[i], fomalProductList[i])
+    print(i, changedToFomalname[i], fomalProductList[i])
 
 
 ## 아닌것들 제외하기
